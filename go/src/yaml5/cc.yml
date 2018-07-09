@@ -1,0 +1,25 @@
+app_id: 10
+log_path: /opt/push/log
+log_name: cc.log
+log_level: 1
+service:
+- id: 10
+  app_conf: /opt/push/app10
+  app_name: app10
+  command: /opt/push/appp/bin/cmd.sh
+  api_url: http://data-ccs.jpushoa.cn
+  keys:
+  - key: ServerConf
+    file: server.conf
+  - key: LogConf
+    file: log4cxx.conf
+- id: 11
+  app_conf: /opt/push/app11
+  app_name: app11
+  command: /opt/push/app/bin/cmd.sh
+  api_url: http://data-ccs.jpushoa.cn
+  keys:
+  - key: ServerConf
+    file: server.conf
+  - key: LogConf
+    file: log4cxx.conf

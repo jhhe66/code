@@ -1,0 +1,228 @@
+//包结构
+//请求包 0x0a + HTHeadV3 + ReqBody + 0x0b
+//响应包 0x0a + HTHeadV3 + RspBody + 0x0b
+
+//HTHeadV3结构体参见ht_head_v3.h
+//struct HTHeadV3
+//{
+//    uint8_t ucFlag;           //0xF0客户端请求，0xF1 服务器应答, 0xF2  服务器主动发包, 0xF3  客户端应答, 0xF4 服务器之间的包
+//    uint8_t ucVersion;        //版本号  VER_MMEDIA = 4
+//    uint8_t ucKey;            //加密类型  E_NONE_KEY = 0, E_SESSION_KEY = 1, E_RAND_KEY = 2, E_SERV_KEY= 3
+//    uint8_t ucReserved;       //保留字节
+//    uint16_t usCmd;           //命令字
+//    uint16_t usSeq;           //序列号
+//    uint32_t uiFrom;          //源UID  FROM_SERVER = 0
+//    uint32_t uiTo;            //目的UID TO_SERVER = 0
+//    uint32_t uiLen;           //包总长度
+//    uint16_t usRet;           //返回码
+//    uint16_t usSysType;       //包来源
+//    char acEcho[8];           //回带字段
+//    char acReserved[16];      //保留字段
+//};
+
+import "HT_muc_body.proto";
+package ht.muc;
+
+
+//根据不同的cmd_type来使用不同的body
+enum MUC_CMD_TYPE
+{
+    GO_CMD_MUC_CREATE_ROOM                      = 0x7041;    //创建群
+    GO_CMD_MUC_CREATE_ROOM_ACK                  = 0x7042;    //创建群回应
+    GO_CMD_MUC_REMOVE_MEMBER                    = 0x7045;    //移除群成员
+    GO_CMD_MUC_REMOVE_MEMBER_ACK                = 0x7046;    //移除群成员应答
+    GO_CMD_MUC_USER_QUIT                        = 0x7047;    //用户主动退群
+    GO_CMD_MUC_USER_QUIT_ACK                    = 0x7048;    //用户主动退群应答
+    GO_CMD_MUC_MESSAGE                          = 0x7049;    //发送群消息
+    GO_CMD_MUC_MESSAGE_ACK                      = 0x704A;    //发送群消息应答
+    GO_CMD_NOTIFY_INVITE_MEMBER                 = 0x704B;    //广播通知用户加群
+    GO_CMD_NOTIFY_INVITE_MEMBER_ACK             = 0x704C;    //广播通知用户加群
+    GO_CMD_NOTIFY_REMOVE_MEMBER                 = 0x704D;    //广播通知群主删除用户
+    GO_CMD_NOTIFY_REMOVE_MEMBER_ACK             = 0x704E;    //广播通知群主删除用户应答
+    GO_CMD_NOTIFY_MEMBER_QUIT                   = 0x704F;    //广播通知用户主动退群
+    GO_CMD_NOTIFY_MEMBER_QUIT_ACK               = 0x7050;    //广播通知用户主动退群应答
+    GO_CMD_MUC_MODIFY_ROOMNAME                  = 0x7051;    //修改群聊名称
+    GO_CMD_MUC_MODIFY_ROOMNAME_ACK              = 0x7052;    //修改群聊名称应答
+    GO_CMD_NOTIFY_ROOMNAME_CHANGED              = 0x7053;    //广播通知群名称变更
+    GO_CMD_NOTIFY_ROOMNAME_CHANGED_ACK          = 0x7054;    //广播通知群名称变更应答
+    GO_CMD_MODIFY_MEMBER_NAME                   = 0x7055;    //修改群成员名称
+    GO_CMD_MODIFY_MEMBER_NAME_ACK               = 0x7056;    //修改群成员名称应答
+    GO_CMD_NOTIFY_MEMBERNAME_CHANGED            = 0x7057;    //广播通知用户群名称变更
+    GO_CMD_NOTIFY_MEMBERNAME_CHANGED_ACK        = 0x7058;    //广播通知用户群名称变更应答
+    GO_CMD_MODIFY_MUC_PUSH_SETTING              = 0x7059;    //修改群聊推送设置
+    GO_CMD_MODIFY_MUC_PUSH_SETTING_ACK          = 0x705A;    //修改群聊推送设置应答
+    GO_CMD_GET_MUC_ROOM_INFO                    = 0x705B;    //获取群详细信息
+    GO_CMD_GET_MUC_ROOM_INFO_ACK                = 0x705C;    //获取群详细信息应答
+    GO_CMD_ADD_MUC_TO_CONTACT_LIST              = 0x705D;    //将群添加到联系列表
+    GO_CMD_ADD_MUC_TO_CONTACT_LIST_ACK          = 0x705E;    //将群添加到联系列表应答
+    GO_CMD_GET_MUC_CONTACT_LIST                 = 0x705F;    //获取群聊联系列表
+    GO_CMD_GET_MUC_CONTACT_LIST_ACK             = 0x7060;    //获取群聊联系列表应答
+
+    // 新增加功能协议命令字
+    GO_CMD_MUC_REQ_JOIN_ROOM                    = 0x7061;    //主动申请加群请求
+    GO_CMD_MUC_REQ_JOIN_ROOM_ACK                = 0x7062;    //主动申请加群请求应答
+    GO_CMD_MUC_OPEN_REQ_VERIFY                  = 0x7065;    //开启群邀请确认
+    GO_CMD_MUC_OPEN_REQ_VERIFY_ACK              = 0x7066;    //开启群邀请确认应答
+    GO_CMD_NOTIFY_OPEN_REQ_VERIFY               = 0x7067;    //开启群邀请确认广播通知
+    GO_CMD_NOTIFY_OPEN_REQ_VERIFY_ACK           = 0x7068;    //开启群邀请确认广播应答
+    GO_CMD_MUC_REQ_JOIN_ROOM_HANDLE             = 0x7069;    //申请加群管理员处理结果
+    GO_CMD_MUC_REQ_JOIN_ROOM_HANDLE_ACK         = 0x706A;    //申请加群管理员处理结果应答
+    GO_CMD_MUC_SET_ADMIN_REQ                    = 0x706B;    //申请加群设置管理员请求
+    GO_CMD_MUC_SET_ADMIN_REQ_ACK                = 0x706C;    //申请加群设置管理员请求应答
+    GO_CMD_NOTIFY_SET_ADMIN                     = 0x706D;    //广播设置管理员
+    GO_CMD_NOTIFY_SET_ADMIN_ACK                 = 0x706E;    //广播设置管理员应答
+    GO_CMD_CREATEUSER_AUTHORIZATION_TRANS       = 0x706F;    //创建者权限转让请求
+    GO_CMD_CREATEUSER_AUTHORIZATION_TRANS_ACK   = 0X7070;    //创建者权限转让应答
+    GO_CMD_NOTIFY_AUTHORIZATION_TRANS           = 0x7071;    //广播群主权限转发
+    GO_CMD_NOTIFY_AUTHORIZATION_TRANS_ACK       = 0x7072;    //广播群主权限转发应答
+    GO_CMD_MUC_GET_ROOM_BASE_INFO               = 0x7073;    //查询群基本属性包含创建者、管理员、群成员数限制、是否开启群主确认
+    GO_CMD_MUC_GET_ROOM_BASE_INFO_ACK           = 0x7074;    //查询群基本属性包含创建者、管理员、群成员数限制、是否开启群主确认应答
+    GO_CMD_MUC_SET_ROOM_ANNOUNCEMENT            = 0x7075;    //设置群公告请求
+    GO_CMD_MUC_SET_ROOM_ANNOUNCEMENT_ACK        = 0x7076;    //设置群公告请求请求
+    GO_CMD_NOTIFY_ROOM_ANNOUNCEMENT             = 0x7077;    //广播群公告
+    GO_CMD_NOTIFY_ROOM_ANNOUNCEMENT_ACK         = 0x7078;    //广播群公告应答
+    GO_CMD_QUREY_USR_IS_IN_ROOM                 = 0x7079;    //查询用户是否已经加入群聊
+    GO_CMD_QUREY_USR_IS_IN_ROOM_ACK             = 0x707A;    //查询用户是否已经加入群聊应答
+
+    // 从IMServer 发送过来的 客户端无需处理
+    GO_CMD_VOIP_BLOCK_SETTING                   = 0x7151;    //block voip
+    GO_CMD_VOIP_BLOCK_SETTING_RES               = 0x7152;
+
+    // 群VOIP 广播
+    GO_CMD_GVOIP_INVITE_BROADCAST               = 0x7303;    //广播发起群语音
+    GO_CMD_GVOIP_INVITE_BROADCAST_ACK           = 0x7304;    //广播发起群语音应答
+    GO_CMD_GVOIP_MEMBER_JOIN_BROADCAST          = 0x7305;    //广播用户加入群语音
+    GO_CMD_GVOIP_MEMBER_JOIN_BROADCAST_ACK      = 0x7306;    //广播用户加入群语音应答
+    GO_CMD_GVOIP_MEMBER_LEAVE_BROADCAST         = 0x7307;    //广播用户退出群语音
+    GO_CMD_GVOIP_MEMBER_LEAVE_BROADCAST_ACK     = 0x7308;    //广播用户退出群语音应答
+    GO_CMD_GVOIP_END_BROADCAST                  = 0x7309;    //广播群语言结束
+    GO_CMD_GVOIP_END_BROADCAST_ACK              = 0x730A;    //广播群语言结束应答
+
+        //lua 请求 MUC
+    GO_CMD_GET_MUC_GET_QRCODE_INFO             = 0x7501;    //获取群二维码扫描之后的基本信息
+    GO_CMD_GET_MUC_GET_QRCODE_INFO_ACK         = 0x7502;    //获取群二维码扫描之后的基本信息
+}
+
+
+enum MUC_SYS_TYPE
+{
+    SYS_IM_SERVER       = 1;            //im server
+    SYS_MOMENT          = 2;            //信息流
+    SYS_CGI             = 3;            //CGI
+    SYS_PUSH            = 4;            //Push
+    SYS_TYPE_TOOL       = 20;           //测试工具
+}
+
+enum MUC_RET_CODE
+{
+    RET_SUCCESS                    = 0;     //成功
+
+    RET_SOME_ONE_BLACK_ME          = 1;     // 有用户拉黑了我
+    RET_MEMBER_ON_SUPPORT          = 2;     // 收方客户端不支持
+    RET_MEMBER_EXEC_LIMIT          = 3;     // 超过群限制成员数
+    RET_WAIT_ADMIN_VERIFY          = 4;     // 加群申请如果开启了管理员确认 申请加群应答返回等待管理员确认
+    RET_MUCMESSAGE_BANNED          = 31;    // 用户被禁言
+    RET_MEMBER_REJECT              = 91;    // 收方拒接加入群聊
+
+    RET_PERMISSION_DENIED          = 94;     // 没有权限发起操作
+
+    RET_SERVER_BUSY                = 100;
+    RET_UNFORMATTED_PACKET         = 102;
+    RET_NO_ACCESS                  = 103;
+    RET_INVALID_CLIENT             = 104;
+    RET_INVALID_SESSION            = 105;
+    RET_INVALID_PARAM              = 106;
+
+    RET_PB_ERR                     = 500;            //pb序列化反序列化失败
+    RET_INTERNAL_ERR               = 501;            //内部错误
+    RET_SESS_TIMEOUT_ERR           = 502;            //内部超时
+    RET_INPUT_PARAM_ERR            = 503;            //输入参数不合法
+    RET_SSDB_ERR                   = 504;            //SSDB错误
+    RET_DATA_ERR                   = 505;            //存储的数据错误
+    RET_REDIS_ERR                  = 506;            //redis错误
+}
+
+
+message MucReqBody
+{
+    optional CreateRoomReqBody                        create_room_reqbody                   = 1;
+    optional RemoveMemberReqBody                      remove_member_reqbody                 = 3;
+    optional QuitRoomReqBody                          quit_room_reqbody                     = 4;
+    optional ModifyRoomNameReqBody                    modify_room_name_reqbody              = 5;
+    optional ModifyMemberNameReqBody                  modify_member_name_reqbody            = 6;
+    optional ModifyPushSettingReqBody                 modify_push_setting_reqbody           = 7;
+    optional GetRoomInfoReqBody                       get_room_info_reqbody                 = 8;
+    optional MucMessageReqBody                        muc_message_reqbody                   = 9;
+    optional AddRoomToContactListReqBody              add_room_to_contact_list_reqbody      = 10;
+    optional GetRoomFromContactListReqBody            get_room_from_contact_list_reqbody    = 11;
+    optional NotifyInviteMemberReqBody                notify_invite_member_reqbody          = 12;
+    optional NotifyRemoveMemberReqBody                notify_remove_member_reqbody          = 13;
+    optional NotifyMemberQuitReqBody                  notify_member_quit_reqbody            = 14;
+    optional NotifyRoomNameChangeReqBody              notify_room_name_change_reqbody       = 15;
+    optional NotifyMemberNameChangeReqBody            notify_member_name_change_reqbody     = 16;
+
+    // 群VOIP的协议 客户端但是收在线消息和取离线时需要用新的pb 解析 需要留意
+    optional S2SGvoipInviteBroadCastReqBody           gvoip_invite_broadcast_reqbody        = 17;
+    optional S2SGvoipEndBroadCastReqBody              gvoip_end_breadcast_reqbody           = 18;
+    optional S2SGvoipMemberChangeBroadCastReqBody     gvoip_member_change_braodcast_reqbody = 19;
+
+    optional RequestJoinRoomReqBody                   request_join_room_reqbody             = 20;
+    optional MucOpenVerifyReqBody                     muc_open_verify_reqbody               = 22;
+    optional NotifyOpenVerifyReqBody                  notify_open_verify_reqbody            = 23;
+    optional MucJoinRoomHandleReqBody                 mcu_join_room_handle_reqbody          = 24;
+    optional MucSetAdminReqBody                       muc_set_admin_reqbody                 = 25;
+    optional NotifySetAdminReqBody                    notify_set_admin_reqbody              = 26;
+    optional CreateUserAuthTransReqBody               create_user_trans_reqbody             = 27;
+    optional NotifyCreateUserTransReqBody             notify_create_user_trans_reqbody      = 28;
+    optional MucGetRoomBaseInfoReqBody                muc_get_room_base_info_reqbody        = 29;
+    optional MucSetRoomAnnouncementReqBody            muc_set_room_announcement_reqbody     = 30;
+    optional NotifySetRoomAnnouncementReqBody         notify_set_room_announcement_reqbody  = 31;
+    optional QueryUserIsAlreadyInRoomReqBody          query_user_is_already_in_reqbody      = 32;
+
+    //设置屏蔽群VOIP
+    optional S2SVoipBlockSettingReqBody               s2s_voip_block_setting_reqbody        = 40;
+    optional QueryQRcodeInfoReqBody                   query_qrcode_info_reqbody             = 41;
+
+};
+
+
+message MucRspBody
+{
+    optional CreateRoomRspBody                        create_room_rspbody                   = 1;
+    optional RemoveMemberRspBody                      remove_member_rspbody                 = 3;
+    optional QuitRoomRspBody                          quit_room_rspbody                     = 4;
+    optional ModifyRoomNameRspBody                    modify_room_name_rspbody              = 5;
+    optional ModifyMemberNameRspBody                  modify_member_name_rspbody            = 6;
+    optional ModifyPushSettingRspBody                 modify_push_setting_rspbody           = 7;
+    optional GetRoomInfoRspBody                       get_room_info_rspbody                 = 8;
+    optional MucMessageRspBody                        muc_message_rspbody                   = 9;
+    optional AddRoomToContactListRspBody              add_room_to_contact_list_rspbody      = 10;
+    optional GetRoomFromContactListRspBody            get_room_from_contact_list_rspbody    = 11;
+    optional NotifyInviteMemberRspBody                notify_invite_member_rspbody          = 12;
+    optional NotifyRemoveMemberRspBody                notify_remove_member_rspbody          = 13;
+    optional NotifyMemberQuitRspBody                  notify_member_quit_rspbody            = 14;
+    optional NotifyRoomNameChangeRspBody              notify_room_name_change_rspbody       = 15;
+    optional NotifyMemberNameChangeRspBody            notify_member_name_change_rspbody     = 16;
+
+    // 群VOIP的协议 客户端但是收在线消息和取离线时需要用新的pb 解析 需要留意
+    optional S2SGvoipInviteBroadCastRspBody           gvoip_invite_broadcast_rspbody        = 17;
+    optional S2SGvoipEndBroadCastRspBody              gvoip_end_breadcast_rspbody           = 18;
+    optional S2SGvoipMemberChangeBroadCastRspBody     gvoip_member_change_braodcast_rspbody = 19;
+
+    optional RequestJoinRoomRspBody                   request_join_room_rspbody             = 20;
+    optional MucOpenVerifyRspBody                     muc_open_verify_rspbody               = 22;
+    optional NotifyOpenVerifyRspBody                  notify_open_verify_rspbody            = 23;
+    optional MucJoinRoomHandleRspBody                 mcu_join_room_handle_rspbody          = 24;
+    optional MucSetAdminRspBody                       muc_set_admin_rspbody                 = 25;
+    optional NotifySetAdminRspBody                    notify_set_admin_rspbody              = 26;
+    optional CreateUserAuthTransRspBody               create_user_trans_rspbody             = 27;
+    optional NotifyCreateUserTransRspBody             notify_create_user_trans_rspbody      = 28;
+    optional MucGetRoomBaseInfoRspBody                muc_get_room_base_info_rspbody        = 29;
+    optional MucSetRoomAnnouncementRspBody            muc_set_room_announcement_rspbody     = 30;
+    optional NotifySetRoomAnnouncementRspBody         notify_set_room_announcement_rspbody  = 31;
+    optional QueryUserIsAlreadyInRoomRspBody          query_user_is_already_in_rspbody      = 32;
+
+        //设置屏蔽群VOIP
+    optional S2SVoipBlockSettingRspBody               s2s_voip_block_setting_rspbody        = 40;
+    optional QueryQRcodeInfoRspBody                     query_qrcode_info_rspbody           = 41;
+};

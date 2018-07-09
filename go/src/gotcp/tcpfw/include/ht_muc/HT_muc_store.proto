@@ -1,0 +1,21 @@
+package ht.muc_store;
+
+enum QUIT_STATE_TYEP {
+    ENUM_QUIT_STATE_NORMAL       = 0;
+    ENUM_QUIT_STATE_SELF_QUIT    = 1;
+    ENUM_QUIT_STATE_ADMIN_REMOVE = 2;
+}
+
+message MemberInfoStore
+{
+    optional uint32 room_id                     = 1; //群聊房间
+    optional uint32 uid                         = 2; //用户uid
+    optional uint32 invite_id                   = 3; //邀请人uid
+    optional bytes  nick_name                   = 4; //用户昵称
+    optional uint32 oreder_id                   = 5; //加入次序
+    optional int64  join_ts                     = 6; //加入时间
+    optional uint32 push_setting                = 7; //推送设置 0:有通知  1:关闭通知
+    optional uint32 contact_list                = 8; //是否保存到通讯录
+    optional uint32 quit_state                  = 9; //当前状态 0:正常成员 1:自己退出 2:管理员踢出
+    optional uint32 update_ts                   = 10; //更新时间
+};

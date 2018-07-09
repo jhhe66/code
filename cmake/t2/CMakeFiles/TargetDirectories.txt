@@ -1,0 +1,7 @@
+/root/code/cmake/t2/CMakeFiles/rebuild_cache.dir
+/root/code/cmake/t2/CMakeFiles/edit_cache.dir
+/root/code/cmake/t2/CMakeFiles/b_static.dir
+/root/code/cmake/t2/CMakeFiles/t2.dir
+/root/code/cmake/t2/CMakeFiles/b.dir
+/root/code/cmake/t2/CMakeFiles/a_static.dir
+/root/code/cmake/t2/CMakeFiles/a.dir

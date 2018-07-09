@@ -1,0 +1,86 @@
+// ADD_USER_TO_TAG and DEL_USER_FROM_TAG can exist at the same time!
+// 
+
+enum ACTION{
+ //tags operation
+ ADD_USER_TO_TAG = 1; //just add new, for device-api
+ DEL_USER_FROM_TAG = 2;//just del the given tags!, for device-api
+ USER_SET_TAG = 4; // clear old and set new, for interface and device-api
+ USER_CLEAR_TAG = 8;   //clear old tags, for interface and device-api
+ DEL_TAGS_FROM_APP = 16;
+ //alias operation
+ USER_SET_ALIAS = 32; //clear old and set new, for interface and device-api
+ USER_CLEAR_ALIAS = 64; //just clear old, for interface and device-api
+ DEL_ALIAS_FROM_APP = 128;
+};
+
+
+/// Though QUERY_ACTION is combined, support one type one time now!!! 
+enum QUERY_ACTION{
+  GET_TAGS_BY_USER = 1;
+  GET_ALIAS_BY_USER = 2;
+  GET_USERS_BY_TAG = 4;
+  GET_USERS_BY_ALIAS = 8;
+  GET_APPKEY_TAGS = 16;
+  CHECK_USER_BELONG_TAGS = 32; //many uids but only one tag or error:too many tags!
+  CHECK_USER_BELONG_ALIAS = 64; //many uids but only one alias or error: too many alias!
+  GET_USERS_COUNT_BY_TAGS = 128; 
+  GET_USERS_COUNT_BY_ALIAS = 256;
+  CHECK_TAGS_HAS_USERS = 512;   
+  CHECK_ALIAS_HAS_USERS = 1024;  
+  GET_TAGS_COUNT_BY_USER = 2048;
+};
+
+enum PLATFORM{
+ ANDROID = 0;
+ IPHONE = 1;
+ WINPHONE = 2;
+};
+
+enum SERVER_TYPE{
+ INTERFACE_API = 1;
+ DEVICE_API = 2;
+}
+// errcode defin
+enum STATUS{
+ SUCCESS = 0;
+ BAD_PROTO = 1; //proto parse execption
+ NO_APPKEY = 2; //no appkey
+ NO_PLATFORM = 3; //no platform
+ NO_QUERY_ACTION = 4;
+ SERIALIZE_RESP_FAILED = 5;
+ SERVER_INTERNAL_ERROR = 6;
+ EXCEED_TOTAL_PAGE = 7;
+ TOO_MANY_TAGS = 8;
+ TOO_MANY_ALIAS = 9;
+ NO_UID = 10;
+ NO_TAGS = 11;
+ NO_ALIAS = 12;
+ AUTHORITY_FAILED = 13;
+ INVALID_TAGS = 14;
+ INVALID_ALIAS = 15;
+ INVALID_PAGE = 16;
+ STATUS_REDISDOWN=64;
+ TOO_MANY_QUERYS = 65;
+ QUERY_TOO_FREQUENCY = 66;
+ OTHER_API_ERR = 67; //新增,第三方平台错误
+ STATUS_OTHER_ERR =128;
+};
+
+//!兼容miPush huweiPush meizuPush新增字段
+enum DEVSUBTYPE{
+NORMAL_TYPE = 1; //maybe include 'xiaomi' 'huawei'...
+XIAOMI_TYPE = 2;
+HUAWEI_TYPE = 4;
+MEIZU_TYPE = 8;
+}
+message UserStuff{
+optional uint64 uid = 1;
+optional DEVSUBTYPE type = 2 [ default = NORMAL_TYPE]; //type值唯一
+optional bytes token = 3; //仅tagalias内部使用，对于查询模块，不会返回此字段。
+}
+
+message MiBaseInfo{
+optional bytes appid = 1;//package name
+optional bytes appsecret = 2; //
+}

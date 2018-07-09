@@ -1,0 +1,4 @@
+/root/code/cmake_example/t2/_CPack_Packages/Linux/TGZ/hello-1.0.0-x86_64/share/doc/cmake/t2/COPYRIGHT
+/root/code/cmake_example/t2/_CPack_Packages/Linux/TGZ/hello-1.0.0-x86_64/share/doc/cmake/t2/README
+/root/code/cmake_example/t2/_CPack_Packages/Linux/TGZ/hello-1.0.0-x86_64/bin/runhello.sh
+/root/code/cmake_example/t2/_CPack_Packages/Linux/TGZ/hello-1.0.0-x86_64/bin/hello

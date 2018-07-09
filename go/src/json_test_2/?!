@@ -1,0 +1,35 @@
+package main
+
+import (
+	"fmt"
+	"encoding/json"
+)
+
+
+type ConfData struct {
+    Key     string `json: "configKey"`
+	Value   string `json: "configValue"`
+}
+
+type DataRsp struct {
+	Code        int     `json: "code"`
+	Msg         string  `json: "msg"`
+	ClientID    string  `json: "clientId"`
+	Version     string  `json: "version"`
+	Datas   []ConfData  `json: "configData"`
+}
+
+func main() {
+	json_str := `{"msg": "当前appI对应的服务信息尚未注册，请联系管理员！", "code": 1}`	
+
+	data := DataRsp{}
+
+	err := json.Unmarshal([]byte(json_str), &data)
+	if err != nil {
+		fmt.Printf("error: %s\n", err.Error())
+		return
+	}
+	
+	fmt.Printf("data: %v\n", data)
+	
+}

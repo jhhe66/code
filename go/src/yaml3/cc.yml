@@ -1,0 +1,6 @@
+id: 10
+app_id: 100
+conf_file: "/opt/push/app/conf"
+command: "notify.sh"
+api_url: "http://ccs.jpush.cn/data/"
+log_path: "/opt/push/ccs-client/log"

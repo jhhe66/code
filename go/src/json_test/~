@@ -1,0 +1,25 @@
+// json_test project main.go
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+)
+
+type ColorGroup struct {
+	ID     int
+	Name   string
+	Colors []string
+}
+
+func main() {
+	json_str := `{"ID":1,"Name":"Reds","Colors":["Crimson","Red","Ruby","Maroon"]}`
+
+	var g ColorGroup
+
+	error := json.Unmarshal([]byte(json_str), &g)
+
+	if error == nil {
+		fmt.Printf("%+v\n", g)
+	}
+}

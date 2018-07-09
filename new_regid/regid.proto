@@ -1,0 +1,9 @@
+package JPush;
+
+message regid 
+{
+	required fixed64	version		= 1; 
+	required bytes 		appkey 		= 2;
+	required fixed64 	uid 		= 3;
+	required fixed64 	platform	= 4;
+}

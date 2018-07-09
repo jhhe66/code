@@ -1,0 +1,80 @@
+Highlighting groups for various occasions
+-----------------------------------------
+SpecialKey	SpecialKey
+NonText	NonText CCTreeHiMarkers CCTreeHiArrow CCTreeUpArrowBlock
+Directory	Directory
+ErrorMsg	ErrorMsg
+IncSearch	IncSearch
+Search	Search
+MoreMsg	MoreMsg
+ModeMsg	ModeMsg cFuntions
+LineNr	LineNr CCTreeMarkers CCTreeArrow CCTreePathMark CCTreeHiPathMark
+CursorLineNr	CursorLineNr
+Question	Question
+StatusLine	StatusLine
+StatusLineNC	StatusLineNC
+VertSplit	VertSplit
+Title	Title
+Visual	Visual
+VisualNOS	VisualNOS
+WarningMsg	WarningMsg
+WildMenu	WildMenu
+Folded	Folded
+FoldColumn	FoldColumn
+DiffAdd	DiffAdd
+DiffChange	DiffChange
+DiffDelete	DiffDelete
+DiffText	DiffText
+SignColumn	SignColumn
+Conceal	Conceal
+SpellBad	SpellBad
+SpellCap	SpellCap
+SpellRare	SpellRare
+SpellLocal	SpellLocal
+Pmenu	Pmenu
+PmenuSel	PmenuSel
+PmenuSbar	PmenuSbar
+PmenuThumb	PmenuThumb
+TabLine	TabLine
+TabLineSel	TabLineSel
+TabLineFill	TabLineFill
+CursorColumn	CursorColumn
+CursorLine	CursorLine
+ColorColumn	ColorColumn
+
+Syntax highlighting groups
+--------------------------
+MatchParen	MatchParen
+Comment	Comment cComment cCommentSkip cCommentL cCommentStart cCppOut cCppOut2 cCppOutIf2 cCppOutSkip cCppInElse2
+Constant	Constant String Character Number Boolean Float cString cCppString cCharacter cIncluded cCommentString cComment2String cNumber cFloat cOctal
+	cConstant
+Special	Special Tag SpecialChar Delimiter SpecialComment Debug cSpecial cFormat cSpecialCharacter
+Identifier	Identifier Function CCTreeSymbol
+Statement	Statement Conditional Repeat Label Operator Keyword Exception cStatement cLabel cConditional cRepeat cUserLabel cOperator
+PreProc	PreProc Include Define Macro PreCondit CCTreeHiKeyword cOctalZero cPreCondit cPreConditMatch cCppOutWrapper cCppInWrapper cPreProc cInclude
+	cDefine
+Type	Type StorageClass Structure Typedef cType cStructure cStorageClass
+Underlined	Underlined
+Ignore	Ignore CCTreeMarkExcl CCTreeMarkTilde
+Error	Error cBadContinuation cError cSpaceError cSpecialError cCurlyError cErrInParen cErrInBracket cParenError cCommentStartError cOctalError
+	cCommentError
+Todo	Todo CCTreeHiSymbol cTodo
+Normal	Normal
+Cursor	Cursor
+cCppSkip	cCppSkip
+cBadBlock	cBadBlock
+cCppParen	cCppParen
+cCppBracket	cCppBracket
+cBlock	cBlock
+cBitField	cBitField
+cNumbersCom	cNumbersCom
+cParen	cParen
+cBracket	cBracket
+cNumbers	cNumbers
+cCppInIf	cCppInIf
+cCppInElse	cCppInElse
+cCppOutIf	cCppOutIf
+cCppOutElse	cCppOutElse
+cCppInSkip	cCppInSkip
+cMulti	cMulti
+cUserCont	cUserCont

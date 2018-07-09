@@ -1,0 +1,24 @@
+exchange:
+  type: direct
+  autodel: false
+  confirm: false
+  durable: true
+  name: ex-to-jmq
+  passive: false
+  rkey: rkey-to-jmq
+id: c03ed188-92b1-4be3-b396-4dfc78f09fc9
+queue:
+  autodel: false
+  durable: true
+  exclusive: false
+  name: queue-to-jmq
+  needack: false
+  passive: false
+  prefetch_cnt: 100
+  rkey: rkey-to-jmq
+srv:
+  server: 183.232.25.113:5672
+vhost:
+  name: /
+  password: TMQ.Push
+  user: push

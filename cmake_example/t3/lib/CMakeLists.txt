@@ -1,0 +1,20 @@
+SET(LIBHELLO_SRC hello.c)
+ADD_LIBRARY(hello SHARED ${LIBHELLO_SRC})
+ADD_LIBRARY(hello_static STATIC ${LIBHELLO_SRC})
+SET_TARGET_PROPERTIES(hello_static PROPERTIES OUTPUT_NAME "hello")
+SET_TARGET_PROPERTIES(hello PROPERTIES VERSION 1.2 SOVERSION 1)
+
+get_filename_component(LIB_DIR
+${CMAKE_CURRENT_SOURCE_DIR}/../../../cmake_example/cmake ABSOLUTE)
+
+
+#install
+INSTALL(TARGETS hello hello_static
+	LIBRARY DESTINATION lib
+	ARCHIVE DESTINATION lib)
+
+INSTALL(FILES hello.h DESTINATION include/hello)
+
+#export
+export(TARGETS hello FILE ${LIB_DIR}/libhello.cmake)
+

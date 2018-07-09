@@ -1,0 +1,54 @@
+//请求： 
+
+import "tagalias_common/tagalias_common.proto"; 
+
+package TagAliasBatchQuery;
+ message OpsUnit{
+ optional QUERY_ACTION cmd = 1;
+ optional int32 page = 2 [default = 1];
+ repeated int64 uid = 3; //最多一次1000个，多于1000按非法请求丢弃。
+ repeated bytes tags = 4;
+ repeated bytes alias = 5; 
+ optional bytes queryk = 6;
+ optional DEVSUBTYPE dev_type = 7 [default = NORMAL_TYPE];
+ repeated int32 total = 8;
+ }
+// for first query!
+message TagAliasQuery{
+ optional int64 reqNo = 1 [default = 0];
+ optional bytes appkey = 2;
+ optional PLATFORM platform = 3;
+ repeated OpsUnit query = 4;
+}
+// for remain result!
+message TagAliasQueryII{
+ optional int64 reqNo = 1;
+ optional int32 total = 2;
+ optional int32 page = 3; //which page client want to query!
+ optional QUERY_ACTION cmd = 4;
+ optional bytes queryK = 5;
+}
+//result
+//响应：
+message TagAlsResult{
+ optional QUERY_ACTION req_type = 1;
+ optional STATUS code = 2 [default = SUCCESS];
+ optional bytes msg = 3 [default = "SUCCESS"];
+ optional int32 total = 4 [default = 1];   //total page!
+ optional int32 cur = 5 [default = 1];     // cur response page, just total is equal cur,response is completed! Client need to request it before it.
+ optional uint32 expired = 6;
+ optional bytes queryK = 7;
+ repeated int64 uid = 8; //uid hit
+ repeated int64 ouid = 9; //uid not hit
+ optional int32 uid_count = 10;
+ repeated bytes tags = 11; //"tag1,tag2,tag3"
+ repeated bytes alias = 12; //"alias"
+ optional DEVSUBTYPE dev_type = 13 [default = NORMAL_TYPE];
+}
+message TagAlsResp{
+ optional int64 reqNo = 1;
+ optional int32 code = 2; //success
+ optional bytes appkey = 3;
+ optional PLATFORM platform = 4;
+ repeated TagAlsResult result = 5;
+}

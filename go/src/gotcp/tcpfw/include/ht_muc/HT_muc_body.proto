@@ -1,0 +1,545 @@
+
+package ht.muc;
+
+
+// 群申请当前处理状态
+enum VERIFY_STAT
+{
+    ENUM_NOT_NEED_VERIFY                  = 0;       // 默认关闭 不需要群邀请确认
+    ENUM_NEED_VERIFY                      = 1;       //需要邀请确认
+}
+
+
+// 加群申请处理结果
+enum HANDLE_OP_TYPE
+{
+    ENUM_HANDLE_REJECT             = 0;       // 默认拒绝用户加入群聊
+    ENUM_HANDLE_ACCEPT             = 1;       // 接受进群
+}
+
+enum ROOMID_FROM_TYPE
+{
+    ENUM_FROM_INVITE               = 0; //别人邀请加群
+    ENUM_FROM_QRCODE               = 1; //从二维码
+    ENUM_FROM_OTHER                = 30;//从其它地方
+}
+
+enum VOIP_BLOCK_SETTING
+{
+    ENUM_VOIP_UN_BLOCKED        = 0;   // 不屏蔽voip
+    ENUM_VOIP_BLOCKED           = 1;   // 屏蔽voip
+    ENUM_VOIP_UN_KNOW           = 2;   // 位置处理
+
+}
+
+enum VOIP_BLOCK_TYPE {
+    ENUM_USER                      = 1;
+    ENUM_ROOM                      = 2;
+    ENUM_UN_KNOW_TYPE              = 255;
+}
+
+message MucHeader
+{
+	optional uint32	 	code	=	1;		//状态码
+	optional bytes 		reason 	=	2;		//失败的原因，失败的时候才有
+}
+
+//用户基本信息
+message RoomMemberInfo
+{
+	optional uint32 uid				= 1;        //用户uid
+	optional bytes  nick_name		= 2;		//用户昵称
+    optional bytes  head_photo_url  = 3;        //用户头像
+    optional bytes  country         = 4;        //国家
+}
+
+
+
+//创建群聊
+message CreateRoomReqBody
+{
+	optional uint32 create_uid		= 1;	//创建者uid
+    optional bytes  nick_name       = 2;    //创建这昵称
+    repeated RoomMemberInfo members = 3;    //邀请的用户
+}
+message CreateRoomRspBody
+{
+    optional MucHeader              status                  = 1; //返回值 0:成功
+    repeated uint32                 list_non_support_uid    = 2; //不支持用户uid列表
+    repeated uint32                 list_black_me           = 3; //拉黑我的用户列表
+	optional uint32                 room_id                 = 4; //群号
+    optional uint64                 room_timestamp          = 5; //群资料版本号 注意：此文档中 所有的群资料版本号的单位都是秒
+}
+
+
+message NotifyInviteMemberReqBody
+{
+    optional uint32 room_id                                  = 1;  //群ID
+    optional RoomMemberInfo op_info                          = 2;  //发起操作用户的uid和昵称
+    optional RoomMemberInfo inviter_info                     = 3;  //邀请者的uid和昵称
+    repeated RoomMemberInfo members                          = 4;  //加入用户
+    optional uint32 notify_time                              = 5;  //通知时间
+    optional uint64 room_timestamp                           = 6;  //群资料时间戳  注意：此文档中 所有的群资料版本号的单位都是秒
+    optional uint32 room_id_from                             = 7;  //加入的方式：扫描二维码加入或用户邀请加入
+    optional bytes  msg_id                                   = 8;  //唯一标识一次处理
+}
+
+message NotifyInviteMemberRspBody
+{
+}
+
+message RemoveMemberReqBody
+{
+	optional uint32 admin_uid                               = 1;  //发起邀请用户uid
+    optional bytes  admin_name                              = 2;  //邀请人昵称
+    optional uint32 room_id                                 = 3;  //群号
+    optional uint32 remove_uid                              = 4;  //被删除用户uid
+    optional bytes  remove_name                             = 5;  //被删除用户昵称
+}
+
+message RemoveMemberRspBody
+{
+    optional MucHeader              status                  = 1; //返回码
+    optional uint64                 room_timestamp          = 2; //群的时间戳  注意：此文档中 所有的群资料版本号的单位都是秒
+}
+
+message NotifyRemoveMemberReqBody
+{
+    optional uint32 room_id                                  = 1;  //群ID
+    optional uint32 admin_uid                                = 2;  //管理员用户
+    optional bytes  admin_name                               = 3;  //管理员用户昵称
+    optional uint32 remove_uid                               = 4;  //被删除用户uid
+    optional bytes  remove_name                              = 5;  //被删除昵称
+    optional uint32 notify_time                              = 6;  //通知时间
+    optional uint64 room_timestamp                           = 7;  //群资料时间戳  注意：此文档中 所有的群资料版本号的单位都是秒
+}
+
+message NotifyRemoveMemberRspBody
+{
+}
+
+
+message QuitRoomReqBody
+{
+	optional uint32 quit_uid                                = 1;  //发起邀请用户uid
+    optional bytes  quit_name                               = 2;  //邀请人昵称
+    optional uint32 room_id                                 = 3;  //群号
+}
+
+message QuitRoomRspBody
+{
+    optional MucHeader              status                  = 1;  // 返回码
+    optional uint64                 room_timestamp          = 2; //群的时间戳  注意：此文档中 所有的群资料版本号的单位都是秒
+}
+
+message NotifyMemberQuitReqBody
+{
+    optional uint32 room_id                                  = 1;  //群ID
+    optional uint32 quit_uid                                 = 2;  //退出用户uid
+    optional bytes  quit_name                                = 3;  //退出用户昵称
+    optional uint32 admin_uid                                = 4;  //管理员用户
+    optional uint32 notify_time                              = 5;  //通知时间
+    optional uint64 room_timestamp                           = 6;  //群资料时间戳  注意：此文档中 所有的群资料版本号的单位都是秒
+}
+
+message NotifyMemberQuitRspBody
+{
+}
+
+message NotifyRoomNameChangeReqBody
+{
+    optional uint32 room_id                                  = 1;  //群ID
+    optional uint32 op_uid                                   = 2;  //修改用户uid
+    optional bytes  op_name                                  = 3;  //修改用户昵称
+    optional bytes  room_name                                = 4;  //新的群名称
+    optional uint32 notify_time                              = 5;  //通知时间
+    optional uint64 room_timestamp                           = 6;  //群资料时间戳  注意：此文档中 所有的群资料版本号的单位都是秒
+}
+
+message NotifyRoomNameChangeRspBody
+{
+}
+
+
+message ModifyRoomNameReqBody
+{
+	optional uint32 op_uid                                  = 1;  //操作人用户uid
+    optional bytes  op_name                                 = 2;  //操作人昵称
+    optional uint32 room_id                                 = 3;  //群号
+    optional bytes  room_name                               = 4;  //群名称
+}
+
+message ModifyRoomNameRspBody
+{
+    optional MucHeader                 status                  = 1;  // 返回码
+    optional uint64                 room_timestamp          = 2; //群的时间戳  注意：此文档中 所有的群资料版本号的单位都是秒
+}
+
+message ModifyMemberNameReqBody
+{
+	optional uint32 op_uid                                  = 1;  //发起邀请用户uid
+    optional bytes  op_name                                 = 2;  //邀请人昵称
+    optional uint32 room_id                                 = 3;  //群号
+}
+
+message ModifyMemberNameRspBody
+{
+    optional MucHeader                 status                  = 1;  // 返回码
+    optional uint64                 room_timestamp          = 2; //群的时间戳  注意：此文档中 所有的群资料版本号的单位都是秒
+}
+
+message NotifyMemberNameChangeReqBody
+{
+    optional uint32 room_id                                  = 1;  //群ID
+    optional uint32 op_uid                                   = 2;  //修改用户uid
+    optional bytes  op_name                                  = 3;  //修改用户昵称
+    optional uint32 notify_time                              = 4;  //通知时间
+    optional uint64 room_timestamp                           = 5;  //群资料时间戳 注意：此文档中 所有的群资料版本号的单位都是秒
+}
+
+message NotifyMemberNameChangeRspBody
+{
+}
+
+
+message ModifyPushSettingReqBody
+{
+	optional uint32 op_uid                                  = 1;  //发起邀请用户uid
+    optional uint32 room_id                                 = 2;  //群号
+    optional uint32 push_setting                            = 3;  //推送设置
+}
+
+message ModifyPushSettingRspBody
+{
+    optional MucHeader                 status                 = 1;  // 返回码
+}
+
+message GetRoomInfoReqBody
+{
+	optional uint32 op_uid                                  = 1;  //发起邀请用户uid
+    optional uint32 room_id                                 = 2;  //群号
+    optional uint64 room_timestamp                          = 3;  //群时间戳  注意：此文档中 所有的群资料版本号的单位都是秒
+}
+
+message AnnoType
+{
+    optional uint32     publish_uid                          = 1; // 群公告发布者
+    optional uint32     publish_ts                           = 2; // 群公告发布时间
+    optional bytes      anno_content                         = 3; // 群公告内容
+}
+
+message RoomInfoBody
+{
+    optional uint32                 room_id                 = 1;  //群号
+    optional uint32                 create_uid              = 2;  //创建者
+    repeated uint32                 list_admin_uid          = 3;  //管理员列表
+    optional uint32                 admin_limit             = 4;  //管理员数限制
+    optional uint32                 room_limit              = 5;  //群成员数限制
+    optional bytes                  room_name               = 6;  //群名称
+    optional bytes                  room_desc               = 7;  //群描述
+    optional VERIFY_STAT            verify_stat             = 8;  //是否开启群确认
+    optional AnnoType               announcement            = 9;  //群公告
+    optional uint64                 room_timestamp          = 10;  //群时间戳 注意：此文档中 所有的群资料版本号的单位都是秒
+    optional uint32                 push_setting            = 11; //操作人自己的群消息推送
+    repeated RoomMemberInfo         members                 = 12; //群成员
+}
+message GetRoomInfoRspBody
+{
+    optional MucHeader              status                  = 1;  // 返回码
+    optional RoomInfoBody           room_info               = 2;  // 群详细信息
+}
+
+message MucMessageReqBody
+{
+	optional bytes msg                                  = 1;  //群聊消息 json 格式
+}
+
+message MucRspDetial 
+{
+    optional bytes                     msg_id                  = 1;  // Android 提出的需要试用msgId字段
+}
+
+message MucMessageRspBody
+{
+    optional MucHeader                 status                  = 1;  // 返回码
+    optional MucRspDetial              rsp_detial              = 2;  // 响应详细内容
+}
+
+message AddRoomToContactListReqBody
+{
+	optional uint32 op_uid                                  = 1;  //发起邀请用户uid
+    optional uint32 room_id                                 = 2;  //群号
+    optional uint32 op_type                                 = 3;  //操作类型1:添加  0:删除
+}
+
+message AddRoomToContactListRspBody
+{
+    optional MucHeader                 status               = 1;  // 返回码
+}
+
+message GetRoomFromContactListReqBody
+{
+	optional uint32 op_uid                                  = 1;  //发起邀请用户uid
+}
+
+message GetRoomFromContactListRspBody
+{
+    optional MucHeader              status                  = 1;  // 返回码
+    repeated RoomInfoBody           list_room_info          = 2;  // 群列表
+}
+
+// 用户设置主动屏蔽群语言
+message S2SVoipBlockSettingReqBody 
+{
+    optional uint32 block_id            = 1;    // 屏蔽的id 可以是群或者人
+    optional VOIP_BLOCK_TYPE block_type = 2;    // 标识是屏蔽个人或群聊 如果是群则block_id 代表的是群ID
+    optional VOIP_BLOCK_SETTING action  = 3;    // 开启或关闭
+}
+message S2SVoipBlockSettingRspBody 
+{
+
+    optional MucHeader              status                  = 1;  // 返回码 
+}
+
+//==================================群广播协议
+
+message S2SGvoipInviteBroadCastReqBody
+{
+    optional uint32     create_uid                          = 1; // 发起者uid
+    optional bytes      create_name                         = 2; // 发起者名称
+    optional uint32     room_id                             = 3; // 群id
+    optional bytes      channel_id                          = 4; // 通道id
+    optional uint64     timestamp                           = 5;
+}
+message S2SGvoipInviteBroadCastRspBody
+{
+
+}
+
+message S2SGvoipEndBroadCastReqBody
+{
+    optional uint32     room_id                             = 1; // 群id
+    optional bytes      channel_id                          = 2; // 通道id
+    optional uint64     timestamp                           = 3;
+}
+message S2SGvoipEndBroadCastRspBody
+{
+
+}
+
+message S2SGvoipMemberChangeBroadCastReqBody
+{
+    optional uint32     room_id                             = 1; // 群id
+    optional bytes      channel_id                          = 2; // 通道id
+    optional uint32     change_uid                          = 3; // 加入或离开的uid
+    optional uint32     member_count                        = 4; // 当前群语音成员数
+    optional uint32     total_watcher_count                 = 5; // 需要接收通知的成员总数
+    repeated uint32     total_watcher_list                  = 6; // 需要接收通知的成员列表
+}
+message S2SGvoipMemberChangeBroadCastRspBody
+{
+
+}
+
+// 新增加部分群管理功能
+// 用户主动申请加群 MUC 收到用户申请之后 返回响应给客户端同事将这个请求发送到管理员
+message RequestJoinRoomReqBody
+{
+    optional uint32         room_id                             = 1; // 群id
+    optional RoomMemberInfo inviter_info                        = 2; // 邀请者信息
+    repeated RoomMemberInfo invitee_info                        = 3; // 被邀请者信息
+    optional uint32         room_id_from                        = 4; // 就群方式 扫描二维码或者其他
+    optional bytes          msg_id                              = 5; // 唯一标识一次申请
+}
+
+message RequestJoinRoomRspBody
+{
+    optional MucHeader              status                  = 1;  //返回码
+    repeated uint32                 list_black_me           = 2; //拉黑我的用户列表
+    optional uint64                 room_timestamp          = 3;  //群资料时间戳 注意：此文档中 所有的群资料版本号的单位都是秒 
+}
+
+// 管理员打开群邀请确认
+message MucOpenVerifyReqBody
+{
+    optional uint32 room_id                                  = 1; //群ID
+    optional uint32 req_uid                                  = 2; //操作者uid
+    optional VERIFY_STAT op_type                             = 3; //操作类型 打开 or 关闭
+}
+message MucOpenVerifyRspBody
+{
+    optional MucHeader                 status                  = 1;  // 返回码
+    optional uint64                 room_timestamp          = 2;  //群的时间戳 注意：此文档中 所有的群资料版本号的单位都是秒
+}
+
+// 管理员打开群邀请确认广播
+message NotifyOpenVerifyReqBody
+{
+	optional uint32 room_id                                  = 1;  //群ID
+    optional VERIFY_STAT op_type                             = 3; //操作类型 打开 or 关闭
+    optional uint32 notify_time                              = 5;  //通知时间
+    optional uint64 room_timestamp                           = 6;  //群资料时间戳 注意：此文档中 所有的群资料版本号的单位都是秒
+}
+message NotifyOpenVerifyRspBody
+{
+
+}
+
+//用户申请加群管理员处理结果
+message MucJoinRoomHandleReqBody
+{
+    optional uint32 room_id                                  = 1; //群ID
+    optional RoomMemberInfo op_uid_info                      = 2; //请求处理人Id
+    optional RoomMemberInfo inviter_info                     = 3; //邀请人
+    optional RoomMemberInfo invitee_info                     = 4; //被邀请人
+    optional HANDLE_OP_TYPE handle_type                      = 5; //0:拒绝 1:接受
+    optional uint32         room_id_from                     = 6; //加入方式：扫描二维码或被人邀请加入
+    optional bytes          msg_id                           = 7; //唯一标识一次用户邀请
+}
+
+message MucJoinRoomHandleRspBody
+{
+    optional MucHeader              status                  = 1;  // 返回码
+    optional uint64                 room_timestamp          = 2;  //群的时间戳 注意：此文档中 所有的群资料版本号的单位都是秒
+}
+
+// 群主设置群管理员
+message MucSetAdminReqBody
+{
+    optional uint32 room_id                                  = 1; //群ID
+    optional uint32 op_uid                                   = 2; //操作者ID
+    repeated RoomMemberInfo members                          = 3; //被设置者
+}
+
+message MucSetAdminRspBody
+{
+    optional MucHeader                 status                  = 1;  // 返回码
+    optional uint64                 room_timestamp          = 2;  //群的时间戳 注意：此文档中 所有的群资料版本号的单位都是秒
+}
+
+// 设置群主管理员广播
+message NotifySetAdminReqBody
+{
+	optional uint32 room_id                                  = 1;  //群ID
+    repeated RoomMemberInfo members                          = 4;  //加入用户
+    optional uint32 notify_time                              = 5;  //通知时间
+    optional uint64 room_timestamp                           = 6;  //群资料时间戳
+}
+
+message NotifySetAdminRspBody
+{
+
+}
+
+// 群主权限转让（创建者）
+message CreateUserAuthTransReqBody
+{
+    optional uint32 room_id                                  = 1; //群ID
+    optional uint32 op_uid                                   = 2; //操作者ID
+    optional RoomMemberInfo member                           = 3; //被转让者
+}
+
+message CreateUserAuthTransRspBody
+{
+    optional MucHeader              status                  = 1;  // 返回码
+    optional uint64                 room_timestamp          = 2;  //群的时间戳 注意：此文档中 所有的群资料版本号的单位都是秒
+}
+
+// 群主转让广播
+message NotifyCreateUserTransReqBody
+{
+	optional uint32 room_id                                  = 1;  //群ID
+    optional RoomMemberInfo member                           = 2;  //加入用户
+    optional uint32 notify_time                              = 3;  //通知时间
+    optional uint64 room_timestamp                           = 4;  //群资料时间戳 注意：此文档中 所有的群资料版本号的单位都是秒
+}
+
+message NotifyCreateUserTransRspBody
+{
+
+}
+
+// 获取群基本信息
+message MucGetRoomBaseInfoReqBody
+{
+    optional uint32 room_id                                 = 1; //群ID
+    optional uint32 req_uid                                 = 2; //请求者
+}
+
+
+message RoomBaseInfo
+{
+    optional uint32      create_uid                         = 1;  //创建者
+    repeated uint32      list_admin_uid                     = 2;  //管理员
+    optional uint32      room_limit                         = 3;  //群成员数限制
+    optional VERIFY_STAT verify_stat                        = 4;  //是否开启群确认
+    optional AnnoType    announcement                       = 5;  //群公告
+}
+
+
+message MucGetRoomBaseInfoRspBody
+{
+    optional MucHeader    status                             = 1; //返回吗
+    optional uint64       room_timestamp                     = 2; //群资料时间戳 注意：此文档中 所有的群资料版本号的单位都是秒
+    optional RoomBaseInfo base_info                          = 3; //群基本信息
+}
+
+// 设置群公告请求
+message MucSetRoomAnnouncementReqBody
+{
+    optional uint32     room_id                                 = 1; //群ID
+    optional AnnoType   announcement                            = 2; //群公告
+
+}
+
+message MucSetRoomAnnouncementRspBody
+{
+    optional MucHeader              status                  = 1;  // 返回码
+    optional uint64                 room_timestamp          = 2;  //群的时间戳 注意：此文档中 所有的群资料版本号的单位都是秒
+}
+
+// 设置群公共广播
+message NotifySetRoomAnnouncementReqBody
+{
+	optional uint32    room_id                                  = 1;  //群ID
+    optional AnnoType  announcement                             = 2;  //群公告
+    optional uint32    notify_time                              = 3;  //通知时间
+    optional uint64    room_timestamp                           = 4;  //群资料时间戳 注意：此文档中 所有的群资料版本号的单位都是秒
+}
+
+message NotifySetRoomAnnouncementRspBody
+{
+
+}
+// 查询用户是否已经加入当前群聊
+
+message QueryUserIsAlreadyInRoomReqBody
+{
+    optional uint32     room_id                                 = 1;//群ID
+    optional uint32     op_uid                                  = 2;//操作发起这uid
+}
+
+message QueryUserIsAlreadyInRoomRspBody
+{
+    optional MucHeader              status                       = 1;  // 返回码
+    optional bool                   is_in_room                   = 2;  // 是否已经加入群聊
+}
+
+// 查询用户扫描二维码之后的
+message QueryQRcodeInfoReqBody
+{
+    optional uint32     room_id                                 = 1;//群ID
+    optional uint32     scan_uid                                = 2;// 扫描人
+    optional uint32     share_id                                = 3;// 二维码的分享人
+    optional uint32     max_show_cnt                            = 4;// 返回最多个数的userid
+}
+
+message QueryQRcodeInfoRspBody
+{
+    optional MucHeader              status                      = 1;  // 返回码
+    optional bool                   is_scaner_in_room           = 2;  // 扫码人已经加入群聊
+    optional bool                   is_sharer_in_room           = 3;  // 二维码的分享是否在群
+    optional bytes                  room_name                   = 7;  // 群名字
+    optional uint32                 member_count                = 8;  // 群成员数量
+    repeated uint32                 userids                     = 9;  // max_out_cnt个userid，
+}

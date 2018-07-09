@@ -1,0 +1,13 @@
+package main
+
+import (
+	"strings"
+	_ "fmt"
+)
+
+func main() {
+	sb := new(strings.Builder)
+	sz, err := sb.WriteString("chenbo")
+
+	return
+}

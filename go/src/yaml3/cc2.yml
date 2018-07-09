@@ -1,0 +1,6 @@
+id: 10
+app_id: 100
+conf_file: /opt/push
+command: notify.sh
+api_url: http://ifeng.com
+Log: /opt/push/log

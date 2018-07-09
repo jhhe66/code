@@ -1,0 +1,2 @@
+/root/code/cmake_example/t3/build/lib/CMakeFiles/hello.dir
+/root/code/cmake_example/t3/build/lib/CMakeFiles/hello_static.dir

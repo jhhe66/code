@@ -1,0 +1,121 @@
+package Broadcast;
+//==================== common start =======================
+enum PLATFORM{
+ ANDROID = 0;
+ IPHONE = 1;
+ WINPHONE = 2;
+};
+
+enum STATUS{
+   SUCCESS = 0;
+   BAD_PROTO = 1; //proto parse execption
+   INVALID_APPKEY = 2; //no appkey
+   INVALID_PLATFORM = 3; //no platform
+   INVALID_REGID = 4; //regid is required but absent
+   SERIALIZE_RESP_ERROR = 5;
+   ERROR_PAGE = 6;
+   TOO_MANY_QUERY = 7;
+   SERVER_INTERNAL_ERROR = 100;
+}
+
+//==================== common end =======================
+
+//================== valid start =======================
+enum USERSTATUS{
+	USER_OK = 1; //user belong app.
+	USER_BAD = 2; //user don't belong app.
+	USER_FAIL = 3; //valid failed, should try it latter.
+    USER_ERROR = 4; //uid or appkey or platform is invalid!
+}
+enum VALIDSTATUS{
+	VALID_OK = 1; //user belong app.
+	VALID_BAD = 2; //user don't belong app.
+	VALID_FAIL = 3; //valid failed, should try it latter.
+    VALID_ERROR = 4; //uid or or regid or appkey or platform is invalid!
+}
+//users
+message StatUser
+{
+	optional int64 uid = 1;
+	optional VALIDSTATUS valid = 2 [default = VALID_FAIL];
+}
+message StatUsers
+{
+   optional bytes appkey = 1;
+   optional PLATFORM platform = 2 [default = ANDROID];
+   repeated StatUser users = 3;
+   optional bytes subplatform = 4;
+}
+//regid
+message StatRegid
+{
+	optional bytes regid = 1;
+	optional VALIDSTATUS valid = 2 [default = VALID_FAIL];
+}
+message StatRegids
+{
+   optional bytes appkey = 1;
+   repeated StatRegid  valid = 2;
+}
+
+message StatApps
+{
+    optional bytes appkey = 1;
+    optional PLATFORM platform = 2;
+	optional VALIDSTATUS valid = 3 [default = VALID_FAIL];
+}
+
+//request and response!
+message Validates{
+   optional int64 reqNo = 1 [default = 0];
+   optional bytes cookie = 2;
+   optional STATUS status = 3 [default = SUCCESS ];
+   repeated StatUsers  users = 4;
+   repeated StatRegids regids = 5;
+   repeated StatApps apps = 6;
+   //add for valid push
+   optional bool isPush = 7  [default = true];
+   optional VALIDSTATUS valid = 8 [default = VALID_FAIL];
+}
+
+//================== valid end =======================
+// ================= query start ======================
+message Regids{
+   repeated bytes regid = 1;
+}
+message Users
+{
+   repeated int64 uid = 1;
+}
+
+message UserMeta
+{
+   optional int64 uid = 1;
+   optional bytes regid = 2;
+}
+
+message UserMetas
+{
+    repeated UserMeta metas = 1;
+}
+
+message  Query{
+   optional int64 reqNo = 1 [default = 0];
+   optional bytes cookie = 2;
+   optional bytes scookie = 3;
+   optional bytes appkey = 4;
+   optional PLATFORM platform = 5 [default = ANDROID];
+   optional bytes subplatform = 9;//just for xiaomi valid!
+   optional int32 page = 6 [default = 1];
+   optional Regids regids = 7;////just for compatible
+   optional UserMetas in = 8;
+}
+
+message Response{
+   optional Query query = 1;
+   optional STATUS status = 2 [default = SUCCESS];
+   optional int32 pages = 3 [default = 1]; //total pages
+   optional Users users = 4; //just for compatible
+   optional UserMetas out = 5;
+}
+// ================= query end ======================

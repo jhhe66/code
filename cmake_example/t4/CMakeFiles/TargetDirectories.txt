@@ -1,0 +1,5 @@
+/root/code/cmake_example/t4/CMakeFiles/rebuild_cache.dir
+/root/code/cmake_example/t4/CMakeFiles/edit_cache.dir
+/root/code/cmake_example/t4/bin/CMakeFiles/rebuild_cache.dir
+/root/code/cmake_example/t4/bin/CMakeFiles/edit_cache.dir
+/root/code/cmake_example/t4/bin/CMakeFiles/main.dir

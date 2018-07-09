@@ -1,0 +1,74 @@
+package QueryUser;
+enum PLATFORM{
+ ANDROID = 0;
+ IPHONE = 1;
+ WINPHONE = 2;
+};
+
+enum STATUS{
+   SUCCESS = 0;
+   BAD_PROTO = 1; //proto parse execption
+   INVALID_APPKEY = 2; //no appkey
+   INVALID_PLATFORM = 3; //no platform
+   INVALID_REGID = 4; //regid is required but absent
+   SERIALIZE_RESP_ERROR = 5;
+   ERROR_PAGE = 6;
+   SERVER_INTERNAL_ERROR = 100;
+}
+
+enum USERSTATUS{
+	USER_OK = 1; //user belong app.
+	USER_BAD = 2; //user don't belong app.
+	USER_FAIL = 3; //valid failed, should try it latter.
+    USER_ERROR = 4; //uid or appkey or platform is invalid!
+}
+
+message Regids{
+   repeated bytes regid = 1;
+}
+message Users
+{
+   repeated int64 uid = 1;
+}
+message StatUser
+{
+	optional int64 uid = 1;
+	optional USERSTATUS valid = 2 [default = USER_FAIL];
+}
+message StatUsers
+{
+   optional bytes appkey = 1;
+   optional PLATFORM platform = 2 [default = ANDROID];
+   repeated StatUser users = 3;
+}
+message  Query{
+   optional int64 reqNo = 1 [default = 0];
+   optional bytes cookie = 2;
+   optional bytes scookie = 3;
+   optional bytes appkey = 4;
+   optional PLATFORM platform = 5 [default = ANDROID];
+   optional int32 page = 6 [default = 1];
+   optional Regids regids = 7; 
+}
+//request and response!
+message ValidateUsers{
+   optional int64 reqNo = 1 [default = 0];
+   optional bytes cookie = 2;
+   optional STATUS status = 3 [default = SUCCESS ];
+   repeated StatUsers  apps = 4;
+}
+
+message Querys{
+repeated Query querys = 1;
+}
+
+message Response{
+   optional Query query = 1;
+   optional STATUS status = 2 [default = SUCCESS];
+   optional int32 pages = 3 [default = 1]; //total pages
+   optional Users users = 4;
+}
+
+message Responses{
+    repeated Response responses = 1;
+}

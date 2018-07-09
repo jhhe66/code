@@ -1,0 +1,3 @@
+#!/bin/sh
+
+g++ -o redis_ben redis_ben.cc redis_helper.cc -I. -Wl,-dn -L/usr/local/lib/ -lhiredis -Wl,-dy -O2 -Wall -pipe

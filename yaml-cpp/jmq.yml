@@ -1,0 +1,26 @@
+exchange:
+  autodel: false
+  confirm: false
+  content_encoding: lz4
+  durable: true
+  name: ex-to-jmq-2
+  passive: false
+  rkey: rkey-to-jmq-2
+  type: direct
+id: 1aca04cc-cbef-4875-a340-3b99dff16cb6
+queue:
+  autodel: false
+  durable: true
+  exclusive: false
+  name: queue-to-jmq-2
+  needack: true
+  passive: false
+  prefetch_cnt: 1000
+  rkey: rkey-to-jmq-2
+srv:
+  server: 183.232.25.113:5672
+version: 1522222310021
+vhost:
+  name: /
+  password: Push_MQ
+  user: push

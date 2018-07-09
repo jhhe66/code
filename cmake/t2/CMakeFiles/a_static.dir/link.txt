@@ -1,0 +1,2 @@
+/usr/bin/ar qc lib/liba.a  CMakeFiles/a_static.dir/liba/liba.c.o
+/usr/bin/ranlib lib/liba.a

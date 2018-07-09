@@ -1,0 +1,1 @@
+/usr/bin/cc  -fPIC    -shared -Wl,-soname,libb.so -o libb.so CMakeFiles/b.dir/libb.o 

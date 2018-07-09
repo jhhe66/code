@@ -1,0 +1,1 @@
+/usr/bin/cc   -rdynamic CMakeFiles/t2.dir/main.c.o  -o bin/t2  -L/root/code/cmake/t2/lib -Wl,-rpath,/root/code/cmake/t2/lib lib/liba.so.1.0 lib/libb.so 

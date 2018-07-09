@@ -1,0 +1,42 @@
+[2014/11/28 15:59:31 CST] [DEBG] (main.(*ServerConf).PrintSelf:84) -------- PrintSelf begin --------
+[2014/11/28 15:59:31 CST] [DEBG] (main.(*ServerConf).PrintSelf:85) server->MaxWorker:1
+[2014/11/28 15:59:31 CST] [DEBG] (main.(*ServerConf).PrintSelf:86) server->ChannelLength:100
+[2014/11/28 15:59:31 CST] [DEBG] (main.(*ServerConf).PrintSelf:87) -------- PrintSelf end --------
+[2014/11/28 15:59:31 CST] [DEBG] (main.(*SmsConf).ReadSmsConf:50) -------- ReadSmsConf begin --------
+[2014/11/28 15:59:31 CST] [DEBG] (main.(*SmsConf).ReadSmsConf:63) -------- ReadSmsConf end --------
+[2014/11/28 15:59:31 CST] [DEBG] (main.(*SmsConf).PrintSelf:67) -------- PrintSelf begin --------
+[2014/11/28 15:59:31 CST] [DEBG] (main.(*SmsConf).PrintSelf:68) sms->api: 	http://smsv2ma.boyaa.com/index.php?q=msg/send&
+[2014/11/28 15:59:31 CST] [DEBG] (main.(*SmsConf).PrintSelf:69) sms->appid: 100013
+[2014/11/28 15:59:31 CST] [DEBG] (main.(*SmsConf).PrintSelf:70) sms->key:  	3e38ab0c5d8637700402172a5f14aee2
+[2014/11/28 15:59:31 CST] [DEBG] (main.(*SmsConf).PrintSelf:71) sms->from:  100013
+[2014/11/28 15:59:31 CST] [DEBG] (main.(*SmsConf).PrintSelf:72) sms->pri:  	4
+[2014/11/28 15:59:31 CST] [DEBG] (main.(*SmsConf).PrintSelf:73) -------- PrintSelf end --------
+[2014/11/28 15:59:31 CST] [DEBG] (main.(*RedisConf).PrintSelf:42) --------------------
+[2014/11/28 15:59:31 CST] [DEBG] (main.(*RedisConf).PrintSelf:43) redis->host: 192.168.100.167
+[2014/11/28 15:59:31 CST] [DEBG] (main.(*RedisConf).PrintSelf:44) redis->port: 4501
+[2014/11/28 15:59:31 CST] [DEBG] (main.(*RedisConf).PrintSelf:45) redis->key:  EXCEPTION_Q
+[2014/11/28 15:59:31 CST] [DEBG] (main.(*RedisConf).PrintSelf:46) --------------------
+[2014/11/28 15:59:31 CST] [DEBG] (main.main:106) JSON is empty.
+
+[2014/11/28 15:59:41 CST] [DEBG] (main.main:106) JSON is empty.
+
+[2014/11/28 15:59:51 CST] [DEBG] (main.main:106) JSON is empty.
+
+[2014/11/28 16:00:01 CST] [DEBG] (main.main:106) JSON is empty.
+
+[2014/11/28 16:00:11 CST] [DEBG] (main.main:106) JSON is empty.
+
+[2014/11/28 16:00:21 CST] [DEBG] (main.main:106) JSON is empty.
+
+[2014/11/28 16:00:31 CST] [DEBG] (main.main:106) JSON is empty.
+
+[2014/11/28 16:00:41 CST] [DEBG] (main.main:106) JSON is empty.
+
+[2014/11/28 16:00:51 CST] [DEBG] (main.main:106) JSON is empty.
+
+[2014/11/28 16:01:01 CST] [DEBG] (main.main:106) JSON is empty.
+
+[2014/11/28 16:01:11 CST] [DEBG] (main.main:106) JSON is empty.
+
+[2014/11/28 16:01:21 CST] [DEBG] (main.main:106) JSON is empty.
+

@@ -1,0 +1,14 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/root/code/cmake/t2/liba/liba.c
+liba.h
+/root/code/cmake/t2/liba/liba.h
+
+/root/code/cmake/t2/liba/liba.h
+
