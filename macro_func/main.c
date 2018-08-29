@@ -1,7 +1,7 @@
-//#include "func.h"
+#include "func.h"
 #include <stdio.h>
 
-//#define func_cb(x) func_cb_r(x)
+#define func_cb(x) func_cb_r(x)
 
 int main(int argc, char **argv)
 {

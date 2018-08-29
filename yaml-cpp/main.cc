@@ -35,6 +35,22 @@ __read_jmq(const char* file)
 	__dump_jmq(&config);
 }
 
+static void
+__obj2str()
+{
+	Node root;
+	Node cluster;
+
+	cluster["id"] = 1;
+	root.push_back(cluster);
+
+	if (root[0].IsDefined()) {
+		printf("root: %s\n", root[0]["id"].as<string>().c_str()); 
+		printf("root: %s\n", cluster["id"].as<string>().c_str());	
+	}
+	 
+}
+
 int
 main(int argc, char** argv)
 {
@@ -45,6 +61,7 @@ main(int argc, char** argv)
 	//printf("%s\n", config[0]["name"].as<string>().c_str());
 	
 	__read_jmq("jmq.yml");
+	__obj2str();
 	
 	return 0;
 }
